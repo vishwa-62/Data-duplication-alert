@@ -1,0 +1,17 @@
+{
+  "name": "data-download-duplication-alert-server",
+  "version": "1.0.0",
+  "description": "Backend API and Duplication Detection Engine for Data Download Duplication Alert System",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}
