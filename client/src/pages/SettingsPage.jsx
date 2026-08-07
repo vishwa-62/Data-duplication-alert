@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext.jsx';
-import { Settings, Save, ShieldCheck, Sliders } from 'lucide-react';
+import { Settings, Save, ShieldCheck, Sliders, Cpu } from 'lucide-react';
 
 export const SettingsPage = () => {
   const { settings, updateSystemSettings } = useApp();
@@ -35,20 +35,22 @@ export const SettingsPage = () => {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Duplication Detection Rules & Settings</h1>
-          <p className="page-subtitle">Configure duplicate window sensitivity, threat alert thresholds, and automated block enforcement.</p>
+          <h1 className="page-title">DETECTION RULES & ENGINE CONFIGURATION</h1>
+          <p className="page-subtitle">Configure sliding window time sensitivity, threat alert boundaries, cache retention, and auto-blocking.</p>
         </div>
       </div>
 
-      <form onSubmit={handleSave} style={{ maxWidth: '720px' }}>
+      <form onSubmit={handleSave} style={{ maxWidth: '750px' }}>
         <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
-            <Sliders size={20} style={{ color: 'var(--accent-primary)' }} />
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Detection Window & Frequency Rules</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', borderBottom: '1px dashed var(--border-color)', paddingBottom: '0.75rem' }}>
+            <Sliders size={18} style={{ color: 'var(--accent-primary)' }} />
+            <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              SLIDING WINDOW & FREQUENCY SENSITIVITY
+            </h3>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Duplicate Detection Window (Minutes)</label>
+            <label className="form-label">DUPLICATE DETECTION SLIDING WINDOW (MINUTES)</label>
             <input
               type="number"
               name="DUPLICATE_WINDOW_MINS"
@@ -58,14 +60,14 @@ export const SettingsPage = () => {
               min={5}
               max={1440}
             />
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
-              Time window in minutes to track identical requests from the same user persona.
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
+              Tracking window in minutes for matching identical request hashes per identity node.
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Low Risk Threshold (Downloads)</label>
+              <label className="form-label">LOW RISK THRESHOLD (DOWNLOADS)</label>
               <input
                 type="number"
                 name="ALERT_THRESHOLD_LOW"
@@ -74,13 +76,13 @@ export const SettingsPage = () => {
                 onChange={handleChange}
                 min={1}
               />
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                Number of repeat downloads before issuing warning alert.
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
+                Download repeat count before issuing warning alert.
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">High Risk Threshold (Downloads)</label>
+              <label className="form-label">HIGH RISK THRESHOLD (DOWNLOADS)</label>
               <input
                 type="number"
                 name="ALERT_THRESHOLD_HIGH"
@@ -89,34 +91,36 @@ export const SettingsPage = () => {
                 onChange={handleChange}
                 min={2}
               />
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                Number of repeat downloads triggering high/critical alerts.
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
+                Download repeat count triggering high/critical alerts.
               </div>
             </div>
           </div>
         </div>
 
         <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
-            <ShieldCheck size={20} style={{ color: 'var(--color-critical)' }} />
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Automated Enforcement Controls</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', borderBottom: '1px dashed var(--border-color)', paddingBottom: '0.75rem' }}>
+            <ShieldCheck size={18} style={{ color: 'var(--color-critical)' }} />
+            <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              AUTOMATED ENFORCEMENT & CACHE RETENTION
+            </h3>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Auto-Block Download on Critical Risk</label>
+            <label className="form-label">AUTO-BLOCK DOWNLOAD ON CRITICAL RISK</label>
             <select
               name="BLOCK_ON_CRITICAL"
               className="form-select"
               value={formData.BLOCK_ON_CRITICAL}
               onChange={handleChange}
             >
-              <option value="true">Enabled (Automatically block downloads on critical frequency)</option>
-              <option value="false">Disabled (Only issue security warning alerts)</option>
+              <option value="true">ENABLED (Automatically block downloads on critical frequency)</option>
+              <option value="false">DISABLED (Only issue security warning alerts)</option>
             </select>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Cache Retention Window (Hours)</label>
+            <label className="form-label">CACHE RETENTION WINDOW (HOURS)</label>
             <input
               type="number"
               name="CACHE_RETENTION_HOURS"
@@ -130,7 +134,7 @@ export const SettingsPage = () => {
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <button type="submit" className="btn btn-primary" disabled={saving}>
             <Save size={16} />
-            {saving ? 'Saving Settings...' : 'Save Detection Rules'}
+            {saving ? 'SAVING RULES...' : 'SAVE DETECTION RULES'}
           </button>
         </div>
       </form>

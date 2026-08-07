@@ -49,37 +49,37 @@ export const AuditLogsPage = () => {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Immutable Audit Trail & Data Export</h1>
-          <p className="page-subtitle">Historical records of all data download requests, request fingerprints, and compliance export options.</p>
+          <h1 className="page-title">IMMUTABLE AUDIT TRAIL & EXPORTS</h1>
+          <p className="page-subtitle">Historical archive of all payload request hashes, network fingerprints, and SOC compliance exports.</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.625rem' }}>
           <button className="btn btn-secondary" onClick={handleExportCSV}>
-            <FileText size={16} /> Export CSV
+            <FileText size={16} /> EXPORT CSV
           </button>
           <button className="btn btn-secondary" onClick={handleExportJSON}>
-            <Code size={16} /> Export JSON
+            <Code size={16} /> EXPORT JSON
           </button>
         </div>
       </div>
 
-      {/* Filter Controls */}
-      <div className="glass-card" style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: '260px', position: 'relative' }}>
-          <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+      {/* Cyber Search & Filter Controls */}
+      <div className="glass-card" style={{ marginBottom: '1.5rem', display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: '280px', position: 'relative' }}>
+          <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-primary)' }} />
           <input
             type="text"
             className="form-input"
-            placeholder="Search by user, email, department, or dataset..."
+            placeholder="SEARCH BY PERSONA, EMAIL, DEPT OR DATASET..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            style={{ paddingLeft: '2.5rem' }}
+            style={{ paddingLeft: '2.75rem' }}
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Status:</span>
-          <select className="form-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ width: '180px' }}>
-            <option value="ALL">All Log Statuses</option>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>LOG STATUS:</span>
+          <select className="form-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ width: '200px' }}>
+            <option value="ALL">ALL LOG STATUSES</option>
             <option value="SUCCESS">SUCCESS</option>
             <option value="WARNING_ISSUED">WARNING_ISSUED</option>
             <option value="SERVED_FROM_CACHE">SERVED_FROM_CACHE</option>
@@ -88,47 +88,47 @@ export const AuditLogsPage = () => {
         </div>
       </div>
 
-      {/* Audit Logs Table */}
+      {/* High-Tech Data Table */}
       <div className="table-wrapper">
         <table className="data-table">
           <thead>
             <tr>
-              <th>Log ID</th>
-              <th>Timestamp</th>
-              <th>User / Dept</th>
-              <th>Dataset Requested</th>
-              <th>Request Filters</th>
-              <th>Size</th>
-              <th>Duplicate Flag</th>
-              <th>Action Status</th>
+              <th>LOG ID</th>
+              <th>TIMESTAMP</th>
+              <th>PERSONA / DEPT</th>
+              <th>TARGET DATASET</th>
+              <th>FILTER PARAMS</th>
+              <th>PAYLOAD SIZE</th>
+              <th>DUPLICATE FLAG</th>
+              <th>ACTION STATUS</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                  Loading transaction logs from SQLite database...
+                <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  FETCHING TRANSACTION TELEMETRY FROM DATABASE...
                 </td>
               </tr>
             ) : filteredLogs.length === 0 ? (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                  No log entries matched your filter query.
+                <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  NO AUDIT TRAIL LOGS MATCHED SEARCH QUERY.
                 </td>
               </tr>
             ) : (
               filteredLogs.map(log => (
                 <tr key={log.id}>
-                  <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>#{log.id}</td>
-                  <td style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
+                  <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--accent-primary)' }}>#{log.id}</td>
+                  <td style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
                     {new Date(log.requested_at).toLocaleString()}
                   </td>
                   <td>
-                    <div style={{ fontWeight: 700 }}>{log.user_name}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{log.department} ({log.ip_address})</div>
+                    <div style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{log.user_name}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{log.department} ({log.ip_address})</div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 600 }}>{log.dataset_title}</div>
+                    <div style={{ fontWeight: 700 }}>{log.dataset_title}</div>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                       {log.file_format}
                     </span>
@@ -136,7 +136,7 @@ export const AuditLogsPage = () => {
                   <td style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {log.filter_params}
                   </td>
-                  <td style={{ fontWeight: 600 }}>{log.size_mb} MB</td>
+                  <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{log.size_mb} MB</td>
                   <td>
                     {log.is_duplicate ? (
                       <span className="badge badge-medium">YES (DUPLICATE)</span>
@@ -150,7 +150,7 @@ export const AuditLogsPage = () => {
                     ) : log.status === 'WARNING_ISSUED' ? (
                       <span className="badge badge-high">WARNING ISSUED</span>
                     ) : log.status === 'SERVED_FROM_CACHE' ? (
-                      <span className="badge badge-low" style={{ color: 'var(--color-success)', background: 'var(--color-success-bg)' }}>SERVED FROM CACHE</span>
+                      <span className="badge badge-low" style={{ color: 'var(--color-success)', background: 'var(--color-success-bg)' }}>CACHE SERVED</span>
                     ) : (
                       <span className="badge badge-success">SUCCESS</span>
                     )}

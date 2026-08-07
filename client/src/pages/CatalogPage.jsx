@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { RiskBadge } from '../components/RiskBadge.jsx';
 import { DownloadModal } from '../components/DownloadModal.jsx';
-import { Search, Download, Database, ShieldAlert, Layers } from 'lucide-react';
+import { Search, Download, Database, ShieldAlert, Layers, HardDrive } from 'lucide-react';
 
 export const CatalogPage = () => {
   const { datasets } = useApp();
@@ -22,26 +22,26 @@ export const CatalogPage = () => {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Enterprise Dataset Catalog</h1>
-          <p className="page-subtitle">Browse and request data exports. Live duplicate protection algorithms monitor every transaction.</p>
+          <h1 className="page-title">ENTERPRISE DATASET CATALOG</h1>
+          <p className="page-subtitle">Browse and request encrypted payload transfers. Live duplicate prevention algorithms check every request.</p>
         </div>
       </div>
 
-      {/* Filter Controls */}
-      <div className="glass-card" style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: '260px', position: 'relative' }}>
-          <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+      {/* Cyber Search & Category Filter Controls */}
+      <div className="glass-card" style={{ marginBottom: '2rem', display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: '280px', position: 'relative' }}>
+          <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-primary)' }} />
           <input
             type="text"
             className="form-input"
-            placeholder="Search datasets, reports, or descriptions..."
+            placeholder="SEARCH DATASET CATALOG, CLUSTER TAGS, OR SCHEMAS..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '2.5rem' }}
+            style={{ paddingLeft: '2.75rem' }}
           />
         </div>
 
-        {/* Category Pills */}
+        {/* Category Tactical Pills */}
         <div style={{ display: 'flex', gap: '0.375rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
           {categories.map(cat => (
             <button
@@ -50,29 +50,33 @@ export const CatalogPage = () => {
               className="btn btn-sm"
               style={{
                 background: selectedCategory === cat ? 'var(--accent-primary)' : 'var(--bg-surface)',
-                color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
-                borderRadius: 'var(--radius-full)'
+                color: selectedCategory === cat ? '#020914' : 'var(--text-secondary)',
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                borderRadius: 'var(--radius-sm)',
+                border: selectedCategory === cat ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
+                boxShadow: selectedCategory === cat ? '0 0 10px var(--accent-glow)' : 'none'
               }}
             >
-              {cat}
+              {cat.toUpperCase()}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Dataset Grid */}
+      {/* Tactical Dataset Cards Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}>
         {filteredDatasets.map(dataset => (
           <div key={dataset.id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                <span className="badge badge-medium" style={{ background: 'var(--bg-surface)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>
-                  {dataset.category}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.875rem' }}>
+                <span className="badge" style={{ background: 'var(--bg-surface)', color: 'var(--accent-primary)', border: '1px solid var(--border-color)' }}>
+                  {dataset.category.toUpperCase()}
                 </span>
                 <RiskBadge level={dataset.sensitivity} />
               </div>
 
-              <h3 style={{ fontSize: '1.0625rem', fontWeight: 700, marginBottom: '0.5rem', lineHeight: 1.3 }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 800, fontFamily: 'var(--font-mono)', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
                 {dataset.title}
               </h3>
               <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', minHeight: '2.5rem', lineHeight: 1.4 }}>
@@ -80,11 +84,11 @@ export const CatalogPage = () => {
               </p>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginTop: '0.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                <span>Format: <strong style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>{dataset.file_format}</strong></span>
-                <span>Size: <strong style={{ color: 'var(--text-primary)' }}>{dataset.size_mb} MB</strong></span>
-                <span>Downloads: <strong style={{ color: 'var(--text-primary)' }}>{dataset.download_count}</strong></span>
+            <div style={{ borderTop: '1px dashed var(--border-color)', paddingTop: '1rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                <span>FMT: <strong style={{ color: 'var(--accent-primary)' }}>{dataset.file_format}</strong></span>
+                <span>SIZE: <strong style={{ color: 'var(--text-primary)' }}>{dataset.size_mb} MB</strong></span>
+                <span>DOWNLOADS: <strong style={{ color: 'var(--text-primary)' }}>{dataset.download_count}</strong></span>
               </div>
 
               <button
@@ -93,7 +97,7 @@ export const CatalogPage = () => {
                 onClick={() => setActiveDownloadDataset(dataset)}
               >
                 <Download size={16} />
-                Request Download
+                REQUEST DATASET TRANSFER
               </button>
             </div>
           </div>

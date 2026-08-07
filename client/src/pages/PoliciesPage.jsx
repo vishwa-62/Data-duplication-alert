@@ -22,11 +22,11 @@ export const PoliciesPage = () => {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Custom Security Policy Rules</h1>
-          <p className="page-subtitle">Configure automated enforcement actions based on file payload size, duplication limits, and dataset sensitivity.</p>
+          <h1 className="page-title">AUTOMATED SECURITY RULE ENGINE</h1>
+          <p className="page-subtitle">Configure rule conditions, maximum file thresholds, and automated block/cache enforcement actions.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <Plus size={16} /> Create Security Rule
+          <Plus size={16} /> CREATE POLICY RULE
         </button>
       </div>
 
@@ -39,20 +39,22 @@ export const PoliciesPage = () => {
             <div key={policy.id} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: isEnabled ? 1 : 0.6 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <div style={{
-                  background: isEnabled ? 'var(--accent-glow)' : 'var(--bg-surface)',
+                  background: isEnabled ? 'var(--bg-surface)' : 'var(--bg-primary)',
+                  border: isEnabled ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
                   color: isEnabled ? 'var(--accent-primary)' : 'var(--text-muted)',
                   padding: '0.75rem',
-                  borderRadius: 'var(--radius-md)'
+                  borderRadius: 'var(--radius-md)',
+                  boxShadow: isEnabled ? '0 0 10px var(--accent-glow)' : 'none'
                 }}>
-                  <ShieldCheck size={24} />
+                  <ShieldCheck size={26} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.0625rem', fontWeight: 800 }}>{policy.name}</h3>
-                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: 2 }}>
-                    Rule Type: <strong style={{ color: 'var(--text-primary)' }}>{policy.rule_type}</strong> • Threshold: <strong style={{ color: 'var(--text-primary)' }}>{policy.threshold_value}</strong>
+                  <h3 style={{ fontSize: '1.0625rem', fontWeight: 800, fontFamily: 'var(--font-mono)' }}>{policy.name}</h3>
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>
+                    RULE TYPE: <strong style={{ color: 'var(--accent-primary)' }}>{policy.rule_type}</strong> • THRESHOLD: <strong style={{ color: 'var(--text-primary)' }}>{policy.threshold_value}</strong>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                    Enforcement Action: <span className="badge badge-medium" style={{ background: 'var(--bg-surface)' }}>{policy.action}</span>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>
+                    ACTION: <span className="badge badge-medium" style={{ background: 'var(--bg-surface)' }}>{policy.action}</span>
                   </div>
                 </div>
               </div>
@@ -60,9 +62,9 @@ export const PoliciesPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button
                   onClick={() => toggleSecurityPolicy(policy.id)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isEnabled ? 'var(--color-success)' : 'var(--text-muted)', fontWeight: 700 }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isEnabled ? 'var(--color-success)' : 'var(--text-muted)', fontWeight: 800, fontFamily: 'var(--font-mono)' }}
                 >
-                  {isEnabled ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+                  {isEnabled ? <ToggleRight size={34} style={{ filter: 'drop-shadow(0 0 6px var(--color-success))' }} /> : <ToggleLeft size={34} />}
                   <span>{isEnabled ? 'ENABLED' : 'DISABLED'}</span>
                 </button>
               </div>
@@ -75,15 +77,17 @@ export const PoliciesPage = () => {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '1.25rem' }}>Create Security Rule</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-primary)', marginBottom: '1.25rem', textTransform: 'uppercase' }}>
+              // CREATE SECURITY RULE POLICY
+            </h3>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label className="form-label">Rule Title / Name</label>
+                <label className="form-label">RULE TITLE / DESCRIPTION</label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Block Large Financial Dumps"
+                  placeholder="e.g. BLOCK LARGE FINANCIAL PAYLOAD DUMPS"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   required
@@ -91,7 +95,7 @@ export const PoliciesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Rule Condition Type</label>
+                <label className="form-label">CONDITION TYPE</label>
                 <select className="form-select" value={ruleType} onChange={e => setRuleType(e.target.value)}>
                   <option value="MAX_FILE_SIZE">MAX_FILE_SIZE (Trigger if dataset size MB exceeds threshold)</option>
                   <option value="CRITICAL_BLOCK">CRITICAL_BLOCK (Trigger on Critical Sensitivity repeat downloads)</option>
@@ -100,7 +104,7 @@ export const PoliciesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Threshold Value</label>
+                <label className="form-label">THRESHOLD VALUE</label>
                 <input
                   type="number"
                   className="form-input"
@@ -111,17 +115,17 @@ export const PoliciesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Enforcement Action</label>
+                <label className="form-label">ENFORCEMENT ACTION</label>
                 <select className="form-select" value={action} onChange={e => setAction(e.target.value)}>
-                  <option value="REQUIRE_CACHE">REQUIRE_CACHE (Suggest/Require serving from cached payload)</option>
-                  <option value="BLOCK">BLOCK (Block download transaction immediately)</option>
+                  <option value="REQUIRE_CACHE">REQUIRE_CACHE (Require serving from local cache)</option>
+                  <option value="BLOCK">BLOCK (Block transaction immediately)</option>
                   <option value="ALERT_HIGH">ALERT_HIGH (Generate High Severity Security Alert)</option>
                 </select>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Save Policy Rule</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>CANCEL</button>
+                <button type="submit" className="btn btn-primary">SAVE RULE POLICY</button>
               </div>
             </form>
           </div>

@@ -5,53 +5,81 @@ export const ThreatRadar = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotation(prev => (prev + 3) % 360);
-    }, 50);
+      setRotation(prev => (prev + 2) % 360);
+    }, 40);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: 220, height: 220, margin: '0 auto' }}>
-      <svg viewBox="0 0 200 200" style={{ width: '100%', height: '100%' }}>
-        {/* Radar Circles */}
-        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--border-color)" strokeWidth="1" />
-        <circle cx="100" cy="100" r="65" fill="none" stroke="var(--border-color)" strokeWidth="1" strokeDasharray="3 3" />
-        <circle cx="100" cy="100" r="40" fill="none" stroke="var(--border-color)" strokeWidth="1" />
-        <circle cx="100" cy="100" r="15" fill="none" stroke="var(--border-color)" strokeWidth="1" />
+    <div style={{ position: 'relative', width: 240, height: 240, margin: '0 auto' }}>
+      <svg viewBox="0 0 200 200" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 0 8px var(--accent-glow))' }}>
+        {/* Outer Radar Ring */}
+        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--border-highlight)" strokeWidth="1.5" />
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--border-color)" strokeWidth="1" strokeDasharray="4 4" />
+        <circle cx="100" cy="100" r="45" fill="none" stroke="var(--border-color)" strokeWidth="1" />
+        <circle cx="100" cy="100" r="20" fill="none" stroke="var(--border-color)" strokeWidth="1" />
 
-        {/* Crosshair Lines */}
-        <line x1="10" y1="100" x2="190" y2="100" stroke="var(--border-color)" strokeWidth="1" />
-        <line x1="100" y1="10" x2="100" y2="190" stroke="var(--border-color)" strokeWidth="1" />
+        {/* Crosshair Axes */}
+        <line x1="8" y1="100" x2="192" y2="100" stroke="var(--border-color)" strokeWidth="1" />
+        <line x1="100" y1="8" x2="100" y2="192" stroke="var(--border-color)" strokeWidth="1" />
+        
+        {/* Diagonal Tech Markers */}
+        <line x1="35" y1="35" x2="165" y2="165" stroke="rgba(0, 242, 254, 0.08)" strokeWidth="1" strokeDasharray="2 2" />
+        <line x1="165" y1="35" x2="35" y2="165" stroke="rgba(0, 242, 254, 0.08)" strokeWidth="1" strokeDasharray="2 2" />
 
-        {/* Animated Sweep Wedge */}
+        {/* Rotating Sweep Beam */}
         <g transform={`rotate(${rotation} 100 100)`}>
-          <path d="M 100 100 L 100 10 A 90 90 0 0 1 180 60 Z" fill="var(--accent-glow)" opacity="0.6" />
-          <line x1="100" y1="100" x2="100" y2="10" stroke="var(--accent-primary)" strokeWidth="2" />
+          <path d="M 100 100 L 100 8 A 92 92 0 0 1 185 60 Z" fill="url(#radarGradient)" opacity="0.75" />
+          <line x1="100" y1="100" x2="100" y2="8" stroke="var(--accent-primary)" strokeWidth="2" />
         </g>
 
-        {/* Simulated Detection Targets */}
+        {/* Radar Sweep Gradient */}
+        <defs>
+          <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Target Threat Blips */}
         <g>
-          <circle cx="130" cy="65" r="4" fill="var(--color-critical)">
-            <animate attributeName="r" values="3;6;3" dur="1.5s" repeatCount="indefinite" />
+          {/* Critical Threat Node */}
+          <g transform="translate(135, 60)">
+            <circle cx="0" cy="0" r="4" fill="var(--color-critical)">
+              <animate attributeName="r" values="3;7;3" dur="1.2s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="0" cy="0" r="8" fill="none" stroke="var(--color-critical)" strokeWidth="1" opacity="0.6">
+              <animate attributeName="r" values="6;14;6" dur="1.2s" repeatCount="indefinite" />
+            </circle>
+          </g>
+
+          {/* Warning Node */}
+          <circle cx="70" cy="145" r="3.5" fill="var(--color-warning)">
+            <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite" />
           </circle>
-          <circle cx="75" cy="140" r="3.5" fill="var(--color-warning)" />
-          <circle cx="150" cy="120" r="3" fill="var(--color-success)" />
-          <circle cx="60" cy="50" r="3" fill="var(--accent-primary)" />
+
+          {/* Safe Active Node */}
+          <circle cx="155" cy="125" r="3" fill="var(--color-success)" />
+          
+          {/* Protected User Node */}
+          <circle cx="55" cy="55" r="3.5" fill="var(--accent-primary)" />
         </g>
       </svg>
 
+      {/* Angle Readout Overlay */}
       <div style={{
         position: 'absolute',
-        bottom: -5,
+        bottom: 2,
         left: 0,
         right: 0,
         textAlign: 'center',
         fontSize: '0.6875rem',
         fontWeight: 800,
+        fontFamily: 'var(--font-mono)',
         color: 'var(--accent-primary)',
-        letterSpacing: '0.05em'
+        letterSpacing: '0.08em'
       }}>
-        LIVE SCANNER ACTIVE
+        RADAR SEC :: {rotation.toString().padStart(3, '0')}° BEARING
       </div>
     </div>
   );
