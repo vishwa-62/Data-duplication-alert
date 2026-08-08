@@ -65,5 +65,12 @@ export const api = {
     }),
 
   // Analytics
-  getAnalytics: () => fetchJSON(`${BASE_URL}/analytics`)
+  getAnalytics: () => fetchJSON(`${BASE_URL}/analytics`),
+
+  // Seed Data
+  seedData: (forceReset = false) =>
+    fetchJSON(`${BASE_URL}/seed`, {
+      method: 'POST',
+      body: JSON.stringify({ forceReset })
+    })
 };

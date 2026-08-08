@@ -1,6 +1,7 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { seedComprehensiveData } from './seeder.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -154,52 +155,10 @@ export const initDatabase = async () => {
       )
     `);
 
-    // Seed default settings if empty
-    const existingSettings = await dbQuery(`SELECT COUNT(*) as count FROM settings`);
-    if (existingSettings[0].count === 0) {
-      await dbRun(`INSERT INTO settings (key, value) VALUES ('DUPLICATE_WINDOW_MINS', '60')`);
-      await dbRun(`INSERT INTO settings (key, value) VALUES ('ALERT_THRESHOLD_LOW', '2')`);
-      await dbRun(`INSERT INTO settings (key, value) VALUES ('ALERT_THRESHOLD_HIGH', '4')`);
-      await dbRun(`INSERT INTO settings (key, value) VALUES ('BLOCK_ON_CRITICAL', 'true')`);
-      await dbRun(`INSERT INTO settings (key, value) VALUES ('CACHE_RETENTION_HOURS', '24')`);
-    }
+    // Run comprehensive data seeder
+    await seedComprehensiveData(dbRun, dbQuery, dbGet, false);
 
-    // Seed Policies if empty
-    const existingPolicies = await dbQuery(`SELECT COUNT(*) as count FROM policies`);
-    if (existingPolicies[0].count === 0) {
-      await dbRun(`INSERT INTO policies (name, rule_type, threshold_value, action, status) VALUES
-        ('Large File Repeat Limit', 'MAX_FILE_SIZE', 1000.0, 'REQUIRE_CACHE', 1),
-        ('Critical PII Instant High Alert', 'CRITICAL_BLOCK', 1.0, 'ALERT_HIGH', 1),
-        ('Excessive Repeat Auto-Block', 'DUPLICATE_LIMIT', 3.0, 'BLOCK', 1)
-      `);
-    }
-
-    // Seed Users if empty
-    const existingUsers = await dbQuery(`SELECT COUNT(*) as count FROM users`);
-    if (existingUsers[0].count === 0) {
-      await dbRun(`INSERT INTO users (name, email, department, role, ip_address, risk_score, is_frozen, total_downloads, duplicate_downloads) VALUES 
-        ('Alex Mercer', 'alex.mercer@corp.internal', 'Data Analytics', 'Senior Analyst', '192.168.1.45', 72, 0, 15, 7),
-        ('Sophia Chen', 'sophia.chen@corp.internal', 'Finance & Risk', 'Financial Auditor', '192.168.1.88', 45, 0, 10, 3),
-        ('Marcus Vance', 'marcus.vance@corp.internal', 'Cybersecurity Ops', 'SOC Admin', '192.168.2.110', 10, 0, 24, 0),
-        ('Elena Rostova', 'elena.rostova@corp.internal', 'Engineering', 'DevOps Specialist', '192.168.1.102', 25, 0, 8, 1),
-        ('David Miller', 'david.miller@corp.internal', 'Human Resources', 'HR Manager', '192.168.3.15', 88, 1, 12, 8)
-      `);
-    }
-
-    // Seed Datasets if empty
-    const existingDatasets = await dbQuery(`SELECT COUNT(*) as count FROM datasets`);
-    if (existingDatasets[0].count === 0) {
-      await dbRun(`INSERT INTO datasets (title, category, description, size_mb, file_format, sensitivity, download_count) VALUES 
-        ('Q3 Global Revenue & Tax Ledger 2025', 'Finance', 'Detailed transactional logs, regional tax compliance files, and revenue splits.', 485.5, 'CSV', 'HIGH', 14),
-        ('Customer Telemetry & PII Activity Logs', 'Analytics', 'Raw user events, session duration, hashed IP records, and location heatmaps.', 1240.0, 'JSON', 'CRITICAL', 32),
-        ('Core Database Infrastructure Dumps', 'Engineering', 'Full anonymized snapshot of production database tables for sandbox testing.', 3450.0, 'SQL', 'HIGH', 8),
-        ('Employee Performance Reviews & Salaries 2024-2025', 'HR', 'Comprehensive HR records, salary bands, performance scoring, and bonuses.', 120.2, 'XLSX', 'CRITICAL', 5),
-        ('Quarterly Marketing Campaign Conversion Metrics', 'Marketing', 'Ad spend data, conversion leads, click-through metrics across platforms.', 68.4, 'CSV', 'LOW', 41),
-        ('System Security Audit & Access Logs', 'Security', 'Authentication attempts, firewall breaches, token issuances, and VPN sessions.', 890.0, 'LOG', 'HIGH', 19)
-      `);
-    }
-
-    console.log('Database initialization & feature expansion migration completed successfully.');
+    console.log('Database initialization & comprehensive data seeding completed successfully.');
   } catch (error) {
     console.error('Error initializing database:', error);
   }

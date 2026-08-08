@@ -181,6 +181,16 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const seedDatabaseData = async (forceReset = false) => {
+    try {
+      const res = await api.seedData(forceReset);
+      addToast('success', 'Data Populated', res.message);
+      await refreshAllData();
+    } catch (err) {
+      addToast('error', 'Seeding Failed', err.message);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -207,7 +217,8 @@ export const AppProvider = ({ children }) => {
         toggleSecurityPolicy,
         createSecurityPolicy,
         resolveAlert,
-        updateSystemSettings
+        updateSystemSettings,
+        seedDatabaseData
       }}
     >
       {children}

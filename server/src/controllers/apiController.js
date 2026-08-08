@@ -1,5 +1,6 @@
 import { dbGet, dbQuery, dbRun } from '../config/database.js';
 import { processDownloadRequest, serveFromCache } from '../services/detectionEngine.js';
+import { seedComprehensiveData } from '../config/seeder.js';
 
 // --- DATASETS ---
 export const getDatasets = async (req, res) => {
@@ -333,3 +334,15 @@ export const getAnalytics = async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
+// --- DATA SEEDING & SIMULATION ---
+export const seedData = async (req, res) => {
+  try {
+    const { forceReset } = req.body || {};
+    await seedComprehensiveData(dbRun, dbQuery, dbGet, !!forceReset);
+    res.json({ success: true, message: 'Comprehensive dataset (15 Users, 15 Datasets, 45+ Audit Logs & Security Alerts) populated successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+

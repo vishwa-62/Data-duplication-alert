@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext.jsx';
-import { Settings, Save, ShieldCheck, Sliders, Cpu } from 'lucide-react';
+import { Settings, Save, ShieldCheck, Sliders, Cpu, Database, RotateCcw, Sparkles } from 'lucide-react';
 
 export const SettingsPage = () => {
-  const { settings, updateSystemSettings } = useApp();
+  const { settings, updateSystemSettings, seedDatabaseData } = useApp();
   const [formData, setFormData] = useState({
     DUPLICATE_WINDOW_MINS: '60',
     ALERT_THRESHOLD_LOW: '2',
@@ -12,6 +12,7 @@ export const SettingsPage = () => {
     CACHE_RETENTION_HOURS: '24'
   });
   const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     if (settings && Object.keys(settings).length > 0) {
@@ -29,6 +30,12 @@ export const SettingsPage = () => {
     setSaving(true);
     await updateSystemSettings(formData);
     setSaving(false);
+  };
+
+  const handleSeed = async (forceReset = false) => {
+    setSeeding(true);
+    await seedDatabaseData(forceReset);
+    setSeeding(false);
   };
 
   return (
@@ -131,13 +138,50 @@ export const SettingsPage = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '2rem' }}>
           <button type="submit" className="btn btn-primary" disabled={saving}>
             <Save size={16} />
             {saving ? 'SAVING RULES...' : 'SAVE DETECTION RULES'}
           </button>
         </div>
       </form>
+
+      {/* DEMO & SAMPLE DATA GENERATOR */}
+      <div className="glass-card" style={{ maxWidth: '750px', border: '1px solid rgba(0, 240, 255, 0.3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', borderBottom: '1px dashed var(--border-color)', paddingBottom: '0.75rem' }}>
+          <Database size={18} style={{ color: 'var(--accent-cyan)' }} />
+          <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            DEMO & DATA SEEDING MANAGEMENT
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+          Populate the platform with 15 realistic user identity profiles, 15 enterprise datasets, 5 active security policies, 45+ past download audit logs, cache entries, and risk alerts.
+        </p>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            style={{ borderColor: 'var(--accent-cyan)', color: 'var(--accent-cyan)' }}
+            disabled={seeding}
+            onClick={() => handleSeed(false)}
+          >
+            <Sparkles size={16} />
+            {seeding ? 'SEEDING DATA...' : 'ADD / POPULATE COMPREHENSIVE DATA'}
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-danger"
+            disabled={seeding}
+            onClick={() => handleSeed(true)}
+          >
+            <RotateCcw size={16} />
+            {seeding ? 'RESETTING...' : 'RESET & RE-SEED FRESH SAMPLE DATA'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

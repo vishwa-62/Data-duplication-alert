@@ -18,7 +18,8 @@ import {
   exportAuditLogs,
   getSettings,
   updateSettings,
-  getAnalytics
+  getAnalytics,
+  seedData
 } from '../controllers/apiController.js';
 
 const router = express.Router();
@@ -57,5 +58,8 @@ router.post('/settings', updateSettings);
 
 // Analytics
 router.get('/analytics', getAnalytics);
+
+// Data Seeding
+router.post('/seed', seedData);
 
 export default router;
