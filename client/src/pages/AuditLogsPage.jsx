@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api.js';
+import { MOCK_AUDIT_LOGS } from '../services/mockData.js';
 import { Search, Download, FileText, Code, CheckCircle, ShieldAlert } from 'lucide-react';
 
 export const AuditLogsPage = () => {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState(MOCK_AUDIT_LOGS);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -12,9 +13,10 @@ export const AuditLogsPage = () => {
     setLoading(true);
     try {
       const res = await api.getAuditLogs();
-      setLogs(res.data || []);
+      if (res.data?.length > 0) setLogs(res.data);
     } catch (err) {
-      console.error(err);
+      console.warn('Backend API offline or on GitHub Pages static host, using mock audit logs.');
+      setLogs(MOCK_AUDIT_LOGS);
     } finally {
       setLoading(false);
     }
@@ -25,7 +27,26 @@ export const AuditLogsPage = () => {
   }, []);
 
   const handleExportCSV = () => {
-    window.open('/api/audit-logs/export?format=csv', '_blank');
+    const headers = ['ID', 'Timestamp', 'User', 'Department', 'Dataset', 'Size (MB)', 'Status', 'Is Duplicate', 'Hash'];
+    const rows = logs.map(l => [
+      l.id,
+      `"${l.requested_at}"`,
+      `"${l.user_name}"`,
+      `"${l.department}"`,
+      `"${l.dataset_title ? l.dataset_title.replace(/"/g, '""') : ''}"`,
+      l.size_mb,
+      l.status,
+      l.is_duplicate ? 'YES' : 'NO',
+      l.request_hash
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const dataStr = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', 'download_audit_logs.csv');
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
   };
 
   const handleExportJSON = () => {
